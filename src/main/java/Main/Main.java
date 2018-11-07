@@ -1,29 +1,29 @@
 package Main;
 
 import Logic.Car;
+import Logic.CarCollection;
 
 public class Main {
 
     //TEMP -----------------------------------
 
     public static void main(String[] args) {
-        Car c = new Car(0,0,0,0.5d);
 
-        double FinalTime = 21;
+        CarCollection CC = new CarCollection();
+
+        CC.addCar(new Car(22,0.5d));
+        CC.addCar(new Car(27,0.7d));
+        CC.addCar(new Car(30,1d));
+
+        double FinalTime = 20;
         double Time = 0;
-        double DeltaT = 1;
+        double DeltaT = 1d;
 
         while (Time < FinalTime) {
-            c.drive(DeltaT);
+            System.out.println("Time : " + (Time + 1) + " s -----------------");
+
+            CC.drive(DeltaT);
             Time += DeltaT;
-
-            System.out.println("Time : " + Time + " s");
-            System.out.println("Car's Position : " + c.getPosition());
-            System.out.println("Car's Speed : " + c.getSpeed()*3.6d + " km/h");
-
-            if (c.getMaxSpeed() > 0) {
-                System.out.println("Car's MaxSpeed : " + c.getMaxSpeed() * 3.6d + " km/h");
-            }
 
             System.out.println("");
         }

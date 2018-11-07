@@ -18,6 +18,10 @@ public class Car {
         this.Acceleration = a;
     }
 
+    public Car(double ms, double a) {
+        this(0,0, ms, a);
+    }
+
     public Car() {
         this(0,0,0,0);
     }
@@ -25,9 +29,9 @@ public class Car {
     // METHODS ------------------------------------------------------------------------
 
     public void drive(double dt) {
-        this.Position += dt*Speed;
         this.Speed += dt*Acceleration;
-        // if no max Speed -> infinite Acceleration "Deja vu !!"
+        this.Position += dt*Speed;
+        // if no max Speed -> unlimited Acceleration
         if (this.MaxSpeed > 0 ) {
             this.Speed = Math.min(this.Speed, this.MaxSpeed);
         }

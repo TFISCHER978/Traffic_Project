@@ -1,13 +1,24 @@
+/*
+
 package Main;
 
+import GUI.GUI;
 import Logic.Car;
 import Logic.CarCollection;
+
+import javax.swing.*;
 
 public class Main {
 
     //TEMP -----------------------------------
 
     public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new GUI();
+            }
+        });
 
         CarCollection CC = new CarCollection();
 
@@ -29,3 +40,6 @@ public class Main {
         }
     }
 }
+
+
+*/

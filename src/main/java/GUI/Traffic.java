@@ -8,6 +8,10 @@ import java.awt.*;
  */
 public class Traffic extends JFrame {
 
+    private static final int WIDTH = 1000;
+    private static final int HEIGHT = 600;
+
+
     public Traffic() {
 
         initUI();
@@ -15,11 +19,13 @@ public class Traffic extends JFrame {
 
     private void initUI() {
 
-        add(new Board());
+        add(new Board(WIDTH,HEIGHT));
 
-        setSize(1200, 400);
+        setSize(WIDTH, HEIGHT);
 
-        setTitle("Donut");
+        pack();
+
+        setTitle("Traffic");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }

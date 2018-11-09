@@ -13,28 +13,44 @@ import java.util.ArrayList;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final int ICRAFT_X = 40;
-    private final int ICRAFT_Y = 60;
+    private final static int COEF = 5;  //
+
+    private final static double SimulationSpeed = 0.5d; // Higher the number, faster the simulation
+
     private final int DELAY = 10;
     private Timer timer;
     private CarCollection cc;
+    private ArrayList<Car> carList;
+    private ArrayList<Car> rankedCarList;
 
-    public Board() {
+    private int fWidth;
+    private int fHeight;
+
+    public Board(int w ,int h) {
+
+        fWidth = w;
+        fHeight = h;
 
         initBoard();
     }
 
     private void initBoard() {
 
+        setPreferredSize(new Dimension(fWidth,fHeight));
         addKeyListener(new TAdapter());
         setBackground(Color.BLACK);
 
         cc = new CarCollection();
+        carList = cc.getCarList();
+        rankedCarList = cc.getPosRankedCar();
 
-        cc.addCar(new Car(22,0.5d));
-        cc.addCar(new Car(27,0.7d));
-        cc.addCar(new Car(30,1d));
+        // Add some cars
+        cc.addCar(new Car(600,0,80,0.5d));
+        cc.addCar(new Car(300,0,80,0.7d));
+        cc.addCar(new Car(0,0,80,0.8d));
+        //cc.addCar(new Car(0,30,0,-0.1d));
 
+        // Start timer
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -52,32 +68,79 @@ public class Board extends JPanel implements ActionListener {
 
         Graphics2D g2d = (Graphics2D) g;
 
+        drawRoad(g);
 
-        ArrayList<Car> carList = cc.getCarList();
+        carList = cc.getCarList();
+        rankedCarList = cc.getPosRankedCar();
 
         for (Car c : carList) {
 
-            g2d.setColor(Color.gray);
-            g2d.fillRect((int) c.getPosition(),200,40,20);
+            if (c.getPosition() >= getParent().getWidth()*COEF) {
+                c.setShown(false);
+            } else {
+                c.setShown(true);
+            }
+
+            if(c.isShown()) {
+
+                int cW = c.getWidth()*COEF;
+                int cH = c.getHeight()*COEF;
+
+                int cX = (int) c.getPosition()/COEF;
+                int cY = 125 - cH/2;
+
+                g2d.setColor(c.getColor());
+                g2d.fillRect(cX, cY, cW, cH);
+            }
         }
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        updateMissiles();
+        updateCars();
 
         repaint();
     }
 
-    private void updateMissiles() {
+    // Where we drive cars ==============================================================================
 
-        ArrayList<Car> carList = cc.getCarList();
+    private void updateCars() {
 
-        for (Car c : carList) {
+        for (int i = 0 ; i < rankedCarList.size() ; i++) {
+            Car c = rankedCarList.get(i);
 
-            c.drive(0.5d);
+            if (i == 2) {   // If it's the first car , continue to drive
+                c.drive(SimulationSpeed);
+                //System.out.println("car : " + i + " pos : " + c.getPosition());
+            } else {        // Else maybe it need to slow
+                if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < 100d + c.getWidth()*COEF) {   // MODIFY THIS SHIT -----------------------
+                    c.setAcceleration(rankedCarList.get(i+1).getAcceleration());
+                } else {
+                    c.drive(SimulationSpeed);
+                }
+            }
         }
+    }
+
+    private void drawRoad(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setColor(new Color(47,87,47));
+
+        fWidth = getParent().getWidth();
+        fHeight = getParent().getHeight();
+
+        //Green TOP
+        g2d.fillRect(0,0, fWidth, fHeight-(fHeight - 100) );
+
+        //Green Down
+        g2d.fillRect(0,fHeight - ( fHeight - 200), fWidth,(fHeight-100));
+
+        g2d.setColor(Color.YELLOW);
+        g2d.fillRect(0,150, fWidth,  2);
 
     }
 

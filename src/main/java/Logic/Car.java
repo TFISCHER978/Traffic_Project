@@ -1,5 +1,8 @@
 package Logic;
 
+import java.awt.*;
+import java.util.Random;
+
 public class Car {
     private double Position;    // Car's position m
 
@@ -9,13 +12,28 @@ public class Car {
 
     private double Acceleration; // Car's acceleration m/s
 
-    // CONSTRUCTORS -------------------------------------------------------------------
+    private Color color;
+
+    private int width;
+    private int height;
+
+    private boolean shown;
+
+
+// CONSTRUCTORS -------------------------------------------------------------------
 
     public Car(double p, double s, double ms, double a) {
         this.Position = p;
         this.Speed = s;
         this.MaxSpeed = ms;
         this.Acceleration = a;
+
+        this.color = RandomColor();
+
+        this.shown = true;
+
+        this.width = 4;
+        this.height = 2;
     }
 
     public Car(double ms, double a) {
@@ -37,6 +55,17 @@ public class Car {
         }
     }
 
+    // Return a new random pastel color
+    public Color RandomColor() {
+        Random random = new Random();
+        final float hue = random.nextFloat();
+        // Saturation between 0.1 and 0.3
+        final float saturation = (random.nextInt(4000) + 1000) / 10000f;
+        final float luminance = 0.8f;
+        final Color color = Color.getHSBColor(hue, saturation, luminance);
+
+        return color;
+    }
 
     // GETTERS & SETTERS ---------------------------------------------------------------
 
@@ -70,5 +99,37 @@ public class Car {
 
     public void setAcceleration(double acceleration) {
         Acceleration = acceleration;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public boolean isShown() {
+        return shown;
+    }
+
+    public void setShown(boolean shown) {
+        this.shown = shown;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

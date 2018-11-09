@@ -2,7 +2,7 @@
 
 package Main;
 
-import GUI.GUI;
+import java.util.ArrayList;
 import Logic.Car;
 import Logic.CarCollection;
 
@@ -14,30 +14,28 @@ public class Main {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GUI();
-            }
-        });
-
         CarCollection CC = new CarCollection();
 
-        CC.addCar(new Car(22,0.5d));
-        CC.addCar(new Car(27,0.7d));
-        CC.addCar(new Car(30,1d));
+        CC.addCar(new Car(10,17,0,0));
+        CC.addCar(new Car(15,2,0,0));
+        CC.addCar(new Car(9,50,0,0));
+        CC.addCar(new Car(12,10,0,0));
+        CC.addCar(new Car(2,5,0,0));
 
-        double FinalTime = 20;
-        double Time = 0;
-        double DeltaT = 1d;
+        ArrayList<Car> RankedCars = CC.getPosRankedCar();
+        ArrayList<Car> Cars = CC.getCarList();
 
-        while (Time < FinalTime) {
-            System.out.println("Time : " + (Time + 1) + " s -----------------");
 
-            CC.drive(DeltaT);
-            Time += DeltaT;
-
-            System.out.println("");
+        System.out.println("Non Ranked Cars : ");
+        for (Car c : Cars) {
+            System.out.println(c.getPosition() + " : " + c.getSpeed());
         }
+
+        System.out.println("\nRanked Cars : ");
+        for (Car c : RankedCars) {
+            System.out.println(c.getPosition() + " : " + c.getSpeed());
+        }
+
     }
 }
 

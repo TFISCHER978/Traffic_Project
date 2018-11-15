@@ -13,15 +13,19 @@ import java.util.ArrayList;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final static int COEF = 5;  //
+    private final static int COEF = 2;  //
 
     private final static double SimulationSpeed = 0.5d; // Higher the number, faster the simulation
 
-    private final int DELAY = 10;
+    private final static double ROADSPEED = 20;
+
+    private final int DELAY = 50;
     private Timer timer;
     private CarCollection cc;
     private ArrayList<Car> carList;
     private ArrayList<Car> rankedCarList;
+
+
 
     private int fWidth;
     private int fHeight;
@@ -45,10 +49,11 @@ public class Board extends JPanel implements ActionListener {
         rankedCarList = cc.getPosRankedCar();
 
         // Add some cars
-        cc.addCar(new Car(600,0,80,0.5d));
-        cc.addCar(new Car(300,0,80,0.7d));
-        cc.addCar(new Car(0,0,80,0.8d));
-        //cc.addCar(new Car(0,30,0,-0.1d));
+        cc.addCar(new Car(200,0,ROADSPEED,0.5d));
+        cc.addCar(new Car(300,0,ROADSPEED,0.7d));
+        cc.addCar(new Car(0,0,ROADSPEED,0.8d));
+
+
 
         // Start timer
         timer = new Timer(DELAY, this);
@@ -76,9 +81,9 @@ public class Board extends JPanel implements ActionListener {
         for (Car c : carList) {
 
             if (c.getPosition() >= getParent().getWidth()*COEF) {
-                c.setShown(false);
-            } else {
-                c.setShown(true);
+                c.setPosition(0);
+            } else if (c.getPosition() < 0){
+                c.setPosition(getParent().getWidth()*COEF);
             }
 
             if(c.isShown()) {
@@ -87,7 +92,7 @@ public class Board extends JPanel implements ActionListener {
                 int cH = c.getHeight()*COEF;
 
                 int cX = (int) c.getPosition()/COEF;
-                int cY = 125 - cH/2;
+                int cY = 175 - cH/2;
 
                 g2d.setColor(c.getColor());
                 g2d.fillRect(cX, cY, cW, cH);
@@ -111,7 +116,7 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0 ; i < rankedCarList.size() ; i++) {
             Car c = rankedCarList.get(i);
 
-            if (i == 2) {   // If it's the first car , continue to drive
+            if (i == rankedCarList.size() - 1) {   // If it's the first car , continue to drive
                 c.drive(SimulationSpeed);
                 //System.out.println("car : " + i + " pos : " + c.getPosition());
             } else {        // Else maybe it need to slow
@@ -140,7 +145,18 @@ public class Board extends JPanel implements ActionListener {
         g2d.fillRect(0,fHeight - ( fHeight - 200), fWidth,(fHeight-100));
 
         g2d.setColor(Color.YELLOW);
-        g2d.fillRect(0,150, fWidth,  2);
+
+        Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+        g2d.setStroke(dashed);
+        g2d.drawLine(0,150, fWidth,  150);
+
+        dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{20}, 0);
+        g2d.setStroke(dashed);
+        g2d.drawLine(0,200, fWidth,  200);
+
+        dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{20}, 0);
+        g2d.setStroke(dashed);
+        g2d.drawLine(0,100, fWidth,  100);
 
     }
 

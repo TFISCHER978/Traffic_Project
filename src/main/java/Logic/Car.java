@@ -19,14 +19,17 @@ public class Car {
 
     private boolean shown;
 
+    private int road;
 
 // CONSTRUCTORS -------------------------------------------------------------------
 
-    public Car(double p, double s, double ms, double a) {
+    public Car(double p, double s, double ms, double a, int r) {
         this.Position = p;
         this.Speed = s;
         this.MaxSpeed = ms;
         this.Acceleration = a;
+
+        this.road = r;
 
         this.color = RandomColor();
 
@@ -37,11 +40,11 @@ public class Car {
     }
 
     public Car(double ms, double a) {
-        this(0,0, ms, a);
+        this(0,0, ms, a,1);
     }
 
     public Car() {
-        this(0,0,0,0);
+        this(0,0,0,0, 1);
     }
 
     // METHODS ------------------------------------------------------------------------
@@ -131,5 +134,13 @@ public class Car {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public int getRoad() {
+        return road;
+    }
+
+    public void setRoad(int road) {
+        this.road = road;
     }
 }

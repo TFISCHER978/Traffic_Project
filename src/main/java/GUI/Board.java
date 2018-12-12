@@ -26,7 +26,6 @@ public class Board extends JPanel implements ActionListener {
     private ArrayList<Car> rankedCarList;
 
 
-
     private int fWidth;
     private int fHeight;
 
@@ -42,16 +41,16 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(fWidth,fHeight));
         addKeyListener(new TAdapter());
-        setBackground(Color.BLACK);
+        setBackground(new Color(47,87,47));
 
         cc = new CarCollection();
         carList = cc.getCarList();
         rankedCarList = cc.getPosRankedCar();
 
         // Add some cars
-        cc.addCar(new Car(200,0,ROADSPEED,0.5d));
-        cc.addCar(new Car(300,0,ROADSPEED,0.7d));
-        cc.addCar(new Car(0,0,ROADSPEED,0.8d));
+        cc.addCar(new Car(200,0,ROADSPEED,0.5d,0));
+        cc.addCar(new Car(300,0,ROADSPEED,0.7d,0));
+        cc.addCar(new Car(0,0,ROADSPEED,0.8d,0));
 
 
 
@@ -92,7 +91,7 @@ public class Board extends JPanel implements ActionListener {
                 int cH = c.getHeight()*COEF;
 
                 int cX = (int) c.getPosition()/COEF;
-                int cY = 175 - cH/2;
+                int cY = 175 - cH/2 - (c.getRoad() * 50);
 
                 g2d.setColor(c.getColor());
                 g2d.fillRect(cX, cY, cW, cH);
@@ -133,16 +132,8 @@ public class Board extends JPanel implements ActionListener {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setColor(new Color(47,87,47));
-
         fWidth = getParent().getWidth();
         fHeight = getParent().getHeight();
-
-        //Green TOP
-        g2d.fillRect(0,0, fWidth, fHeight-(fHeight - 100) );
-
-        //Green Down
-        g2d.fillRect(0,fHeight - ( fHeight - 200), fWidth,(fHeight-100));
 
         g2d.setColor(Color.YELLOW);
 

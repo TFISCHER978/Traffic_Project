@@ -115,6 +115,7 @@ public class Board extends JPanel implements ActionListener {
                 int cX = (int) c.getPosition()*SCALE;   // Position
                 int cY = ((y2*SCALE)+y1*4)/4 + (c.getRoad() * 10 * SCALE);
 
+
                 g2d.setColor(c.getColor());
                 g2d.fillRect(cX, cY, cW, cH);
             }
@@ -160,6 +161,7 @@ public class Board extends JPanel implements ActionListener {
         fWidth = getParent().getWidth();
         fHeight = getParent().getHeight();
 
+
         int x1 = 0;    //abscice du point en haut à gauche du rectangle
         int y1 = 100;  //ordonnée du point en haut à gauche du rectangle
         int x2 = fWidth;
@@ -174,21 +176,6 @@ public class Board extends JPanel implements ActionListener {
         g2d.setStroke(dashed);
         g2d.drawLine(0, ((y2*SCALE)+y1*2)/2, fWidth,  ((y2*SCALE)+y1*2)/2);
 
-
-        /**
-        g2d.setColor(Color.YELLOW);
-
-        Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
-        g2d.setStroke(dashed);
-        g2d.drawLine(0,150, fWidth,  150);
-
-        dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{20}, 0);
-        g2d.setStroke(dashed);
-        g2d.drawLine(0,200, fWidth,  200);
-
-        dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{20}, 0);
-        g2d.setStroke(dashed);
-        g2d.drawLine(0,100, fWidth,  100);**/
 
     }
 

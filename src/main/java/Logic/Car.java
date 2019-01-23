@@ -1,6 +1,7 @@
 package Logic;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Car {
@@ -19,14 +20,17 @@ public class Car {
 
     private boolean shown;
 
+    private int road;
 
 // CONSTRUCTORS -------------------------------------------------------------------
 
-    public Car(double p, double s, double ms, double a) {
+    public Car(double p, double s, double ms, double a, int r) {
         this.Position = p;
         this.Speed = s;
         this.MaxSpeed = ms;
         this.Acceleration = a;
+
+        this.road = r;
 
         this.color = RandomColor();
 
@@ -37,22 +41,30 @@ public class Car {
     }
 
     public Car(double ms, double a) {
-        this(0,0, ms, a);
+        this(0,0, ms, a,1);
     }
 
     public Car() {
-        this(0,0,0,0);
+        this(0,0,0,0, 1);
     }
 
     // METHODS ------------------------------------------------------------------------
 
     public void drive(double dt) {
-        this.Speed += dt*Acceleration;
-        this.Position += dt*Speed;
+        this.Speed += dt * Acceleration;
+        this.Position += dt * Speed;
         // if no max Speed -> unlimited Acceleration
-        if (this.MaxSpeed > 0 ) {
+        if (this.MaxSpeed > 0) {
             this.Speed = Math.min(this.Speed, this.MaxSpeed);
         }
+    }
+
+    public void slowWithDistance(double dt, double dist) {    // ralentir  ; simulationSpeed , distance to front car
+
+    }
+
+    public void pass(double dt) {    // depasser
+
     }
 
     // Return a new random pastel color
@@ -131,5 +143,13 @@ public class Car {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public int getRoad() {
+        return road;
+    }
+
+    public void setRoad(int road) {
+        this.road = road;
     }
 }

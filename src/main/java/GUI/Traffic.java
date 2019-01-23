@@ -25,7 +25,7 @@ public class Traffic extends JFrame {
 
         pack();
 
-        setTitle("Traffic");
+        setTitle("Traffic | Scale : Right click - ; Left click +");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }

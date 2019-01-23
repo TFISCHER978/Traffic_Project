@@ -5,15 +5,12 @@ import Logic.CarCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Board extends JPanel implements ActionListener {
 
-    private final static int COEF = 2;  //
+    private static int SCALE = 2;  //
 
     private final static double SimulationSpeed = 0.5d; // Higher the number, faster the simulation
 
@@ -24,7 +21,6 @@ public class Board extends JPanel implements ActionListener {
     private CarCollection cc;
     private ArrayList<Car> carList;
     private ArrayList<Car> rankedCarList;
-
 
 
     private int fWidth;
@@ -42,17 +38,29 @@ public class Board extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(fWidth,fHeight));
         addKeyListener(new TAdapter());
-        setBackground(Color.BLACK);
+        setBackground(new Color(47,87,47));
 
         cc = new CarCollection();
         carList = cc.getCarList();
         rankedCarList = cc.getPosRankedCar();
 
         // Add some cars
-        cc.addCar(new Car(200,0,ROADSPEED,0.5d));
-        cc.addCar(new Car(300,0,ROADSPEED,0.7d));
-        cc.addCar(new Car(0,0,ROADSPEED,0.8d));
+        cc.addCar(new Car(100 * SCALE,0,ROADSPEED,0.5d,0));
+        cc.addCar(new Car(500 * SCALE,0,ROADSPEED,0.7d,1));
+        cc.addCar(new Car(50 * SCALE,0,ROADSPEED,0.8d,0));
 
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                if (SCALE < 5 ) SCALE ++;   //left
+            }
+            if(e.getButton() == MouseEvent.BUTTON2) { }
+            if(e.getButton() == MouseEvent.BUTTON3) {
+                if (SCALE > 1) SCALE --;    //right
+            }
+        }
+        });
 
 
         // Start timer
@@ -75,24 +83,37 @@ public class Board extends JPanel implements ActionListener {
 
         drawRoad(g);
 
+        fWidth = getParent().getWidth();
+        fHeight = getParent().getHeight();
+
+        g2d.setColor(Color.WHITE);
+
+        g2d.drawString( "Road Size : " + fWidth / SCALE + " m", fWidth - 150, 220);
+        g2d.drawString("Scale : " + SCALE, fWidth - 150, 240);
+
         carList = cc.getCarList();
         rankedCarList = cc.getPosRankedCar();
 
+        int x1 = 0;    //abscice du point en haut à gauche du rectangle
+        int y1 = 100;  //ordonnée du point en haut à gauche du rectangle
+        int x2 = fWidth;
+        int y2 = 20;
+
         for (Car c : carList) {
 
-            if (c.getPosition() >= getParent().getWidth()*COEF) {
+            if (c.getPosition() >= fWidth / SCALE) {
                 c.setPosition(0);
             } else if (c.getPosition() < 0){
-                c.setPosition(getParent().getWidth()*COEF);
+                c.setPosition(fWidth / SCALE);
             }
 
             if(c.isShown()) {
 
-                int cW = c.getWidth()*COEF;
-                int cH = c.getHeight()*COEF;
+                int cW = c.getWidth()*SCALE;    // Longueur voiture
+                int cH = c.getHeight()*SCALE;   // largeur voiture
 
-                int cX = (int) c.getPosition()/COEF;
-                int cY = 175 - cH/2;
+                int cX = (int) c.getPosition()*SCALE;   // Position
+                int cY = ((y2*SCALE)+y1*4)/4 + (c.getRoad() * 10 * SCALE);
 
                 g2d.setColor(c.getColor());
                 g2d.fillRect(cX, cY, cW, cH);
@@ -116,11 +137,14 @@ public class Board extends JPanel implements ActionListener {
         for (int i = 0 ; i < rankedCarList.size() ; i++) {
             Car c = rankedCarList.get(i);
 
+            System.out.println("Car : " + i + " pos : " + c.getPosition());
+            System.out.println("Car : " + i + " speed : " + c.getSpeed() + "\n");
+
             if (i == rankedCarList.size() - 1) {   // If it's the first car , continue to drive
                 c.drive(SimulationSpeed);
-                //System.out.println("car : " + i + " pos : " + c.getPosition());
+
             } else {        // Else maybe it need to slow
-                if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < 100d + c.getWidth()*COEF) {   // MODIFY THIS SHIT -----------------------
+                if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < 100d + c.getWidth()*SCALE) {   // MODIFY THIS SHIT -----------------------
                     c.setAcceleration(rankedCarList.get(i+1).getAcceleration());
                 } else {
                     c.drive(SimulationSpeed);
@@ -133,17 +157,25 @@ public class Board extends JPanel implements ActionListener {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setColor(new Color(47,87,47));
-
         fWidth = getParent().getWidth();
         fHeight = getParent().getHeight();
 
-        //Green TOP
-        g2d.fillRect(0,0, fWidth, fHeight-(fHeight - 100) );
+        int x1 = 0;    //abscice du point en haut à gauche du rectangle
+        int y1 = 100;  //ordonnée du point en haut à gauche du rectangle
+        int x2 = fWidth;
+        int y2 = 20;
 
-        //Green Down
-        g2d.fillRect(0,fHeight - ( fHeight - 200), fWidth,(fHeight-100));
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(x1, y1, x2, y2 * SCALE);
 
+        g2d.setColor(Color.YELLOW);
+
+        Stroke dashed = new BasicStroke((int) (0.1 * SCALE), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+        g2d.setStroke(dashed);
+        g2d.drawLine(0, ((y2*SCALE)+y1*2)/2, fWidth,  ((y2*SCALE)+y1*2)/2);
+
+
+        /**
         g2d.setColor(Color.YELLOW);
 
         Stroke dashed = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
@@ -156,7 +188,7 @@ public class Board extends JPanel implements ActionListener {
 
         dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{20}, 0);
         g2d.setStroke(dashed);
-        g2d.drawLine(0,100, fWidth,  100);
+        g2d.drawLine(0,100, fWidth,  100);**/
 
     }
 

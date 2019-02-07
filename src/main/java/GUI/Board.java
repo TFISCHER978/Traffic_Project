@@ -14,7 +14,7 @@ public class Board extends JPanel implements ActionListener {
 
     private final static double SimulationSpeed = 0.5d; // Higher the number, faster the simulation
 
-    private final static double ROADSPEED = 20;
+    private final static double ROADSPEED = 80; //Km/H
 
     private final int DELAY = 50;
     private Timer timer;
@@ -45,9 +45,9 @@ public class Board extends JPanel implements ActionListener {
         rankedCarList = cc.getPosRankedCar();
 
         // Add some cars
-        cc.addCar(new Car(100 * SCALE,0,ROADSPEED,0.5d,0));
-        cc.addCar(new Car(500 * SCALE,0,ROADSPEED,0.7d,1));
-        cc.addCar(new Car(50 * SCALE,0,ROADSPEED,0.8d,0));
+        cc.addCar(new Car(100 * SCALE,0,0,0,1));
+        cc.addCar(new Car(20 * SCALE,0,ROADSPEED/3.6,0.7d,1));
+        //cc.addCar(new Car(50 * SCALE,0,ROADSPEED/3.6,0.8d,0));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -134,22 +134,24 @@ public class Board extends JPanel implements ActionListener {
     // Where we drive cars ==============================================================================
 
     private void updateCars() {
-
         for (int i = 0 ; i < rankedCarList.size() ; i++) {
             Car c = rankedCarList.get(i);
-
-            System.out.println("Car : " + i + " pos : " + c.getPosition());
-            System.out.println("Car : " + i + " speed : " + c.getSpeed() + "\n");
 
             if (i == rankedCarList.size() - 1) {   // If it's the first car , continue to drive
                 c.drive(SimulationSpeed);
 
-            } else {        // Else maybe it need to slow
-                if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < 100d + c.getWidth()*SCALE) {   // MODIFY THIS SHIT -----------------------
-                    c.setAcceleration(rankedCarList.get(i+1).getAcceleration());
+                // Else maybe it need to slow or change road
+            } else if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < c.getSecurDistance() + c.getWidth()*SCALE ) {   // MODIFY THIS SHIT -----------------------
+                if (c.getRoad() == 1 && rankedCarList.get(i + 1).getRoad() == 1) {
+                    //c.slowWithDistance(SimulationSpeed, rankedCarList.get(i+1).getPosition() - c.getPosition());
+                    c.changeRoad();
+                } else if (rankedCarList.get(i + 1).getRoad() == 0) {
+                    rankedCarList.get(i + 1).changeRoad();
                 } else {
                     c.drive(SimulationSpeed);
                 }
+            } else {
+                c.drive(SimulationSpeed);
             }
         }
     }

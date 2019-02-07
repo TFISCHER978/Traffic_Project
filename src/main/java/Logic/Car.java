@@ -59,13 +59,23 @@ public class Car {
         }
     }
 
+    public double getSecurDistance() {
+        return (this.Speed/10)*6;
+    }
+
     public void slowWithDistance(double dt, double dist) {    // ralentir  ; simulationSpeed , distance to front car
 
     }
 
-    public void pass(double dt) {    // depasser
-
+    public void changeRoad() {    // depasser
+        if (this.road == 1) {
+            this.road = 0;
+        } else if (this.road == 0) {
+            this.road = 1;
+        }
     }
+
+
 
     // Return a new random pastel color
     public Color RandomColor() {

@@ -86,14 +86,16 @@ public class Board extends JPanel implements ActionListener {
         fWidth = getParent().getWidth();
         fHeight = getParent().getHeight();
 
+        carList = cc.getCarList();
+        rankedCarList = cc.getPosRankedCar();
+        
         g2d.setColor(Color.WHITE);
 
         g2d.drawString( "Road Size : " + fWidth / SCALE + " m", fWidth - 150, 220);
         g2d.drawString("Scale : " + SCALE, fWidth - 150, 240);
-
-        carList = cc.getCarList();
-        rankedCarList = cc.getPosRankedCar();
-
+        for (int i = 0 ; i<rankedCarList.size() ;i++) {        	       
+        	g2d.drawString("Voiture " + (i+1) +" : " + rankedCarList.get(i).getSpeed() * 3.6 +" km/h", 20 , 220 + 20*i);
+        }
         int x1 = 0;    //abscice du point en haut à gauche du rectangle
         int y1 = 100;  //ordonnée du point en haut à gauche du rectangle
         int x2 = fWidth;

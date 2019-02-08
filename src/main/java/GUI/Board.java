@@ -6,6 +6,7 @@ import Logic.CarCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Board extends JPanel implements ActionListener {
@@ -45,9 +46,9 @@ public class Board extends JPanel implements ActionListener {
         rankedCarList = cc.getPosRankedCar();
 
         // Add some cars
-        cc.addCar(new Car(100 * SCALE,0,0,0,1));
+        cc.addCar(new Car(100 * SCALE,0,(ROADSPEED-30)/3.6,0.4d,1));
         cc.addCar(new Car(20 * SCALE,0,ROADSPEED/3.6,0.7d,1));
-        //cc.addCar(new Car(50 * SCALE,0,ROADSPEED/3.6,0.8d,0));
+        //cc.addCar(new Car(200 * SCALE,0,ROADSPEED/3.6,0.8d,1));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -93,9 +94,11 @@ public class Board extends JPanel implements ActionListener {
 
         g2d.drawString( "Road Size : " + fWidth / SCALE + " m", fWidth - 150, 220);
         g2d.drawString("Scale : " + SCALE, fWidth - 150, 240);
+
         for (int i = 0 ; i<rankedCarList.size() ;i++) {        	       
-        	g2d.drawString("Voiture " + (i+1) +" : " + rankedCarList.get(i).getSpeed() * 3.6 +" km/h", 20 , 220 + 20*i);
+        	g2d.drawString("Voiture " + (i+1) +" : " +  new DecimalFormat("#.##").format(rankedCarList.get(i).getSpeed() * 3.6) +" km/h ; " +  new DecimalFormat("#.##").format(rankedCarList.get(i).getPosition()) + " m ; " + rankedCarList.get(i).getRoad(), 20 , 220 + 20*i);
         }
+
         int x1 = 0;    //abscice du point en haut à gauche du rectangle
         int y1 = 100;  //ordonnée du point en haut à gauche du rectangle
         int x2 = fWidth;
@@ -142,16 +145,20 @@ public class Board extends JPanel implements ActionListener {
             if (i == rankedCarList.size() - 1) {   // If it's the first car , continue to drive
                 c.drive(SimulationSpeed);
 
+
+
                 // Else maybe it need to slow or change road
-            } else if ( rankedCarList.get(i+1).getPosition() - c.getPosition() < c.getSecurDistance() + c.getWidth()*SCALE ) {   // MODIFY THIS SHIT -----------------------
+            } else if ( Math.abs(rankedCarList.get(i+1).getPosition() - c.getPosition()) < c.getSecurDistance() + c.getWidth()*SCALE) {   // MODIFY THIS SHIT -----------------------
+
                 if (c.getRoad() == 1 && rankedCarList.get(i + 1).getRoad() == 1) {
                     //c.slowWithDistance(SimulationSpeed, rankedCarList.get(i+1).getPosition() - c.getPosition());
                     c.changeRoad();
-                } else if (rankedCarList.get(i + 1).getRoad() == 0) {
-                    rankedCarList.get(i + 1).changeRoad();
                 } else {
                     c.drive(SimulationSpeed);
                 }
+            } else if ( (rankedCarList.get(i + 1).getRoad() == 0) && (Math.abs(c.getPosition() - rankedCarList.get(i+1).getPosition()) > c.getSecurDistance() + c.getWidth()*SCALE ) ) {
+                rankedCarList.get(i + 1).changeRoad();
+                c.drive(SimulationSpeed);
             } else {
                 c.drive(SimulationSpeed);
             }

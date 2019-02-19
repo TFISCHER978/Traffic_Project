@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class Traffic extends JFrame {
 
-    private static final int WIDTH = 1000;
+    private static final int WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 50;
     private static final int HEIGHT = 600;
 
 
@@ -25,7 +25,7 @@ public class Traffic extends JFrame {
 
         pack();
 
-        setTitle("Traffic | Scale : Right click - ; Left click +");
+        setTitle("Traffic | Scale : + Up ; - Down | SimSpeed : - Left ; + Right");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
     }

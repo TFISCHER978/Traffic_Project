@@ -1,8 +1,11 @@
 package Logic;
 
 
+import GUI.Traffic;
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 /**
  * Car's collection
@@ -24,6 +27,23 @@ public class CarCollection {
     // METHODS ----------------------------------------------------------------------
 
     public void addCar(Car c) {
+        this.CarList.add(c);
+    }
+
+    public void addRandomCar() {
+
+
+        Random random = new Random();
+
+        int randomRoad = random.nextInt(2);
+        int randomMaxSpeed = random.nextInt(90 + 1 - 65) + 65;
+        int speed = randomMaxSpeed/2;
+        double randomAcceleration = 2.8d + (4.5d - 2.8d) * random.nextDouble();
+
+        //System.out.println("road : " + randomRoad + " ; maxSpeed : " + randomMaxSpeed + " ; speed : " + speed + " ; accele : " + randomAcceleration);
+
+        Car c = new Car(0,speed,randomMaxSpeed/3.6,randomAcceleration/3.6,randomRoad);
+        c.setShowRange(false);
         this.CarList.add(c);
     }
 
@@ -53,6 +73,43 @@ public class CarCollection {
             c.drive(dt);
 
         }
+    }
+
+    public void showCarsRange(boolean b) {
+        for (Car c : CarList) {
+            c.setShowRange(b);
+        }
+    }
+
+
+    public ArrayList<TrafficObject> getObjectInRange(Car c) {
+        ArrayList<TrafficObject> to = new ArrayList<TrafficObject>();
+
+        double cRange = ((c.getSecurDistance() > 10) ? c.getSecurDistance() : 10) + 5;
+
+        for (Car car : CarList) {
+            if (car.getPosition() >= c.getPosition() - cRange && car.getPosition() <= c.getPosition() + cRange + c.getWidth() && car.getPosition() != c.getPosition()) {
+                to.add(new TrafficObject(car.getPosition(), car.getRoad(),car.getPosition() - c.getPosition() - c.getWidth(), car.getSecurDistance()));
+            }
+
+        }
+        to.sort(Comparator.comparingDouble(TrafficObject::getDistToObject));
+        return to;
+    }
+
+    public ArrayList<TrafficObject> getAllObject(Car c) {
+        ArrayList<TrafficObject> to = new ArrayList<TrafficObject>();
+
+        for (Car car : CarList) {
+            if (c.equals(car)) {
+                to.add(new TrafficObject(car.getPosition(), car.getRoad(), 0, car.getSecurDistance()));
+            } else {
+                to.add(new TrafficObject(car.getPosition(), car.getRoad(), car.getPosition() - c.getPosition() - c.getWidth(), car.getSecurDistance()));
+            }
+        }
+
+        to.sort(Comparator.comparingDouble(TrafficObject::getDistToObject));
+        return to;
     }
 
 
